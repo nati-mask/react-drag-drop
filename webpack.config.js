@@ -22,7 +22,33 @@ module.exports = {
                         presets: ['env', 'react']
                     }
                 }
-            }
+            },
+            {
+                test: /\.less$/,
+                include: path.resolve(__dirname, "src"),
+                use: [
+                    {
+                        loader: "style-loader",
+                        options: {
+                            singleton: true,
+                        }
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            sourceMap: true
+                        }
+                    },
+                    {
+                        loader: "less-loader",
+                        options: {
+                            sourceMap: true,
+                            sourceMapFileInline: true,
+                        }
+                    },
+
+                ]
+            },
         ]
     },
     output: {

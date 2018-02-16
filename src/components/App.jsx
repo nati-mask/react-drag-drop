@@ -1,11 +1,14 @@
 import React from 'react';
 
+const DropBox = require('../components/DropBox.jsx');
+
+require('./App.less');
+
 module.exports = class App extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = { test: 0 };
-        console.log('Hi!');
         this.updateTest = this.updateTest.bind(this);
     }
 
@@ -17,10 +20,11 @@ module.exports = class App extends React.Component {
 
     render() {
         return (
-            <p>
-                Hello React! Just workong hong kon foo ({this.state.test + 1})
+            <div>
+                <p className="legend"> Drag and Drop React Tech Challange ({this.state.test + 1}) </p>
                 <button onClick={this.updateTest}>Update</button>
-            </p>
+                <DropBox />
+            </div>
         );
     }
 }
