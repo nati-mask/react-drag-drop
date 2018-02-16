@@ -1,0 +1,6 @@
+# Compiled and managed:
+node_modules
+public/js
+
+# IDE's:
+.vscode

@@ -1,0 +1,31 @@
+{
+  "name": "react-drag-drop",
+  "version": "1.0.0",
+  "description": "Simple test react app, with draggable component",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "serve": "webpack-dev-server --open",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nati-mask/react-drag-drop.git"
+  },
+  "author": "Nati Mask",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/nati-mask/react-drag-drop/issues"
+  },
+  "homepage": "https://github.com/nati-mask/react-drag-drop#readme",
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.1"
+  }
+}
