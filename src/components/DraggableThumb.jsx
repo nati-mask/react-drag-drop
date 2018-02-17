@@ -12,7 +12,7 @@ module.exports = class DraggableThumb extends React.Component {
         return (
             <div
                 className="draggable-thumb"
-                style={{ top: this.props.pos_y, left: this.props.pos_x }}
+                style={{ top: this.props.pos_y || 0, left: this.props.pos_x || 0 }}
                 draggable={true}
                 onDragStart={this.props.onDragStartHandler}
             >
