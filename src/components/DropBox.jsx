@@ -2,15 +2,16 @@ import React from 'react';
 
 require('./DropBox.less');
 
-const { mashape_key } = require('../../.env.json');
-
 const DraggableThumb = require('./DraggableThumb.jsx');
+
+const { positionManager } = require('../singletons');
 
 module.exports = class DropBox extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            loading_positions: true,
             drag_begin_x : 0,
             drag_begin_y : 0,
             pos_x : 0,
@@ -22,24 +23,10 @@ module.exports = class DropBox extends React.Component {
 
     componentWillMount() {
 
-        $.ajax({
-            url: 'https://kvstore.p.mashape.com/collections/positionals/items/pos_x',
-            headers: {
-                'X-Mashape-Key': mashape_key
-            }
-        }).then(result => {
-            console.log("init pos_x:", result.value);
-            this.setState({ pos_x: parseInt(result.value) });
-        })
-
-        $.ajax({
-            url: 'https://kvstore.p.mashape.com/collections/positionals/items/pos_y',
-            headers: {
-                'X-Mashape-Key': mashape_key
-            }
-        }).then(result => {
-            console.log("init pos_y:", result.value);
-            this.setState({ pos_y: parseInt(result.value) });
+        positionManager.getPosition().then(positions => {
+            console.log("Init positions:", positions);
+            this.setState(positions);
+            this.setState({loading_positions : false});
         })
 
     }
@@ -75,33 +62,20 @@ module.exports = class DropBox extends React.Component {
                 drag_begin_y : 0,
             }
 
-        }, () => {
-
-            $.ajax({
-                url: 'https://kvstore.p.mashape.com/collections/positionals/items/pos_x',
-                method: 'PUT',
-                data: String(pos_x),
-                headers: {
-                    'X-Mashape-Key': mashape_key
-                }
-            })
-
-            $.ajax({
-                url: 'https://kvstore.p.mashape.com/collections/positionals/items/pos_y',
-                method: 'PUT',
-                data: String(pos_y),
-                headers: {
-                    'X-Mashape-Key': mashape_key
-                }
-            })
-
-        })
+        }, () => { positionManager.setPosition(pos_x, pos_y); })
     }
 
     render() {
         return (
             <div className="drop-box" onDrop={this.onDropHandler} onDragOver={this.onDragOverHandler}>
-                <DraggableThumb pos_x={this.state.pos_x} pos_y={this.state.pos_y} onDragStartHandler={this.onDragStartHandler}/>
+                {
+                    this.state.loading_positions &&
+                    <span>Loading...</span>
+                }
+                {
+                    !this.state.loading_positions &&
+                    <DraggableThumb pos_x={this.state.pos_x} pos_y={this.state.pos_y} onDragStartHandler={this.onDragStartHandler}/>
+                }
             </div>
         );
     }
