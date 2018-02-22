@@ -2,6 +2,9 @@ import React from 'react';
 
 const DropBox = require('./DropBox.jsx');
 const LoginPage = require('./LoginPage/LoginPage.jsx');
+const Button = require('./global/Button.jsx');
+
+const { loginManager } = require('../singletons');
 
 require('./App.less');
 
@@ -10,31 +13,41 @@ module.exports = class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            test: 0,
             logged_in: null,
+            checking_auth: true,
         };
-        this.updateTest = this.updateTest.bind(this);
         this.loginSuccessHandler = this.loginSuccessHandler.bind(this);
+        this.logoutHandler = this.logoutHandler.bind(this);
     }
 
-    updateTest() {
-        this.setState(prevState => ({
-            test: prevState.test + 1
-        }));
+    logoutHandler() {
+        loginManager.logout();
+        this.setState({ logged_in: null });
     }
 
-    loginSuccessHandler(username) {
-        console.log('Success handler works!');
-        this.setState({ logged_in: username });
+    loginSuccessHandler(logged_user) {
+        this.setState({ logged_in: logged_user.username });
+    }
+
+    componentWillMount() {
+        loginManager.checkLoggedIn().then(logged_user => {
+            console.log("Finish checking Auth!");
+            if (logged_user) {
+                this.setState({ logged_in: logged_user.username, checking_auth : false });
+            } else this.setState({ checking_auth: false });
+        })
     }
 
     render() {
+        var current_page = <div>Loading... Checking Authentication...</div>;
+        if(!this.state.checking_auth) current_page = this.state.logged_in ? <DropBox /> : <LoginPage onSuccess={this.loginSuccessHandler} />;
         return (
             <div>
-                <p className="legend"> Drag and Drop React Tech Challange ({this.state.test + 1}) </p>
-                <button onClick={this.updateTest}>Update</button>
-                {!this.state.logged_in && <LoginPage onSuccess={this.loginSuccessHandler}/>}
-                { this.state.logged_in && <DropBox />}
+                <header className="legend">
+                    <p>Drag and Drop React Tech Challange</p>
+                    { this.state.logged_in && <Button caption="Log Out" onClick={this.logoutHandler}/> }
+                </header>
+                { current_page }
             </div>
         );
     }

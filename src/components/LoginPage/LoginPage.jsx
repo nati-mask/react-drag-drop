@@ -5,6 +5,7 @@ const LoginFields = require('./LoginFields.jsx');
 const Button = require('../global/Button.jsx');
 
 const { username, password } = require('../../../.env.json');
+const { loginManager } = require('../../singletons');
 
 module.exports = class LoginPage extends React.Component {
 
@@ -13,6 +14,7 @@ module.exports = class LoginPage extends React.Component {
         this.state = {
             username: "",
             password: "",
+            loginning: false,
         }
 
         this.loginHandler = this.loginHandler.bind(this);
@@ -21,9 +23,14 @@ module.exports = class LoginPage extends React.Component {
 
     loginHandler () {
         if(this.props.onSuccess) {
-            if(this.state.username === username && this.state.password === password) {
-                this.props.onSuccess(username);
-            } else console.error('Bad username or password!');
+            this.setState({ loginning: true });
+            loginManager.login(this.state).then(user => {
+                this.setState({ loginning: false });
+                this.props.onSuccess(user);
+            }).catch(err => {
+                this.setState({ loginning: false });
+                console.error(err)
+            });
         }
     }
 
@@ -40,7 +47,9 @@ module.exports = class LoginPage extends React.Component {
             <div>
                 <Title title="Login"/>
                 <LoginFields onInput={this.inputHandler} username={this.state.username} password={this.state.password} />
-                <Button caption="Log me in!!" onClick={this.loginHandler} />
+                {
+                    this.state.loginning ? <Button caption="..." /> : <Button caption="Log me in!!" onClick={this.loginHandler} />
+                }
             </div>
         );
     }
