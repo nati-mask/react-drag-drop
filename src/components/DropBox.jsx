@@ -73,7 +73,7 @@ module.exports = class DropBox extends React.Component {
                     this.state.loading_positions ? 
                     <Loading /> :
                     <div className="drop-box" onDrop={this.onDropHandler} onDragOver={this.onDragOverHandler}>
-                        <DraggableThumb pos_x={this.state.pos_x} pos_y={this.state.pos_y} onDragStartHandler={this.onDragStartHandler}/>
+                        <DraggableThumb full_name={this.props.full_name} pos_x={this.state.pos_x} pos_y={this.state.pos_y} onDragStartHandler={this.onDragStartHandler}/>
                     </div>
                 }
             </div>

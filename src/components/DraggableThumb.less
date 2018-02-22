@@ -1,13 +1,25 @@
 .draggable-thumb {
     width: 200px;
-    height: 200px;
-    border-radius: 10px;
-    background-color: salmon;
-    padding: 20px;
+    // height: 200px;
+    // border-radius: 10px;
+    // background-color: salmon;
     position: absolute;
     z-index: 1000;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    .user-avatar img {
+        max-width: 100%;
+        border-radius: 10px;
+    }
+    .username {
+        color: black;
+        position: absolute;
+        padding: 10px;
+        bottom: 15px;
+        width: 180px;
+        // border-radius: 0 0 10px 10px;
+        background-color: fade(white, 60%);
+    }
 }

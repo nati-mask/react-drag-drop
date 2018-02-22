@@ -16,7 +16,12 @@ module.exports = class DraggableThumb extends React.Component {
                 draggable={true}
                 onDragStart={this.props.onDragStartHandler}
             >
-                Drag Me
+                <div className="user-avatar">
+                    <img src="/img/Avatar_BIG.jpg" />
+                </div>
+                <div className="username">
+                    {this.props.full_name}
+                </div>
             </div>
         );
     }

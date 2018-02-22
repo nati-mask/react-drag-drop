@@ -15,6 +15,7 @@ module.exports = class App extends React.Component {
         super(props);
         this.state = {
             logged_in: null,
+            logged_in_full_name: null,
             checking_auth: true,
         };
         this.loginSuccessHandler = this.loginSuccessHandler.bind(this);
@@ -27,21 +28,25 @@ module.exports = class App extends React.Component {
     }
 
     loginSuccessHandler(logged_user) {
-        this.setState({ logged_in: logged_user.username });
+        this.setState({ logged_in: logged_user.username, logged_in_full_name: logged_user.full_name });
     }
 
     componentWillMount() {
         loginManager.checkLoggedIn().then(logged_user => {
             console.log("Finish checking Auth!");
             if (logged_user) {
-                this.setState({ logged_in: logged_user.username, checking_auth : false });
+                this.setState({ logged_in: logged_user.username, logged_in_full_name: logged_user.full_name, checking_auth : false });
             } else this.setState({ checking_auth: false });
         })
     }
 
     render() {
         var current_page = <Loading />;
-        if(!this.state.checking_auth) current_page = this.state.logged_in ? <DropBox /> : <LoginPage onSuccess={this.loginSuccessHandler} />;
+        if (!this.state.checking_auth) current_page = (
+            this.state.logged_in ?
+            <DropBox full_name={this.state.logged_in_full_name} /> :
+            <LoginPage onSuccess={this.loginSuccessHandler} />
+        );
         return (
             <div>
                 <header className="legend">
