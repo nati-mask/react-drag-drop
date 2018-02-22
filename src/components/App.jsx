@@ -3,6 +3,7 @@ import React from 'react';
 const DropBox = require('./DropBox.jsx');
 const LoginPage = require('./LoginPage/LoginPage.jsx');
 const Button = require('./global/Button.jsx');
+const Loading = require('./global/Loading.jsx');
 
 const { loginManager } = require('../singletons');
 
@@ -39,15 +40,19 @@ module.exports = class App extends React.Component {
     }
 
     render() {
-        var current_page = <div>Loading... Checking Authentication...</div>;
+        var current_page = <Loading />;
         if(!this.state.checking_auth) current_page = this.state.logged_in ? <DropBox /> : <LoginPage onSuccess={this.loginSuccessHandler} />;
         return (
             <div>
                 <header className="legend">
-                    <p>Drag and Drop React Tech Challange</p>
-                    { this.state.logged_in && <Button caption="Log Out" onClick={this.logoutHandler}/> }
+                    <p>
+                        Drag and Drop React Tech Challange
+                        { this.state.logged_in && <Button caption="Log Out" onClick={this.logoutHandler}/> }
+                    </p>
                 </header>
-                { current_page }
+                <div className="page">
+                    { current_page }
+                </div>
             </div>
         );
     }

@@ -13,7 +13,7 @@ module.exports = class LoginManager {
             setTimeout(() => {
                 if (localStorage.getItem('drag-drop-logged-in') === "true") resolve({ username: correct_username, full_name });
                 else resolve(null);
-            }, 3000);
+            }, 2500);
         })
     }
 
@@ -25,7 +25,7 @@ module.exports = class LoginManager {
                     return resolve({username, full_name});
                 }
                 return reject(new Error('Bad username or password'));
-            }, 2000);
+            }, 1000);
         })
     }
 

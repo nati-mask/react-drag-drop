@@ -3,6 +3,7 @@ import React from 'react';
 require('./DropBox.less');
 
 const DraggableThumb = require('./DraggableThumb.jsx');
+const Loading = require('./global/Loading.jsx');
 
 const { positionManager } = require('../singletons');
 
@@ -67,14 +68,13 @@ module.exports = class DropBox extends React.Component {
 
     render() {
         return (
-            <div className="drop-box" onDrop={this.onDropHandler} onDragOver={this.onDragOverHandler}>
+            <div>
                 {
-                    this.state.loading_positions &&
-                    <span>Loading...</span>
-                }
-                {
-                    !this.state.loading_positions &&
-                    <DraggableThumb pos_x={this.state.pos_x} pos_y={this.state.pos_y} onDragStartHandler={this.onDragStartHandler}/>
+                    this.state.loading_positions ? 
+                    <Loading /> :
+                    <div className="drop-box" onDrop={this.onDropHandler} onDragOver={this.onDragOverHandler}>
+                        <DraggableThumb pos_x={this.state.pos_x} pos_y={this.state.pos_y} onDragStartHandler={this.onDragStartHandler}/>
+                    </div>
                 }
             </div>
         );

@@ -1,10 +1,24 @@
+@import '../less/variables.less';
+
 body {
     margin: 0;
     padding: 0;
+    background-color: @background-color;
+    color: white;
+    font-family: "Lato", "Arial";
 }
 
 .legend {
     font-size: 150%;
-    padding-bottom: 20px;
-    border-bottom: 1px solid gray;
+    margin-bottom: 20px;
+    background-color: desaturate(@background-color, 10%);
+    border-bottom: 1px solid darken(desaturate(@background-color, 10%), 5%);
+    p {
+        margin: 0;
+        padding: 36px;
+    }
+    .app-btn {
+        float: right;
+        margin-top: -8px;
+    }
 }

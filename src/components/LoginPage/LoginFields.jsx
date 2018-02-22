@@ -1,5 +1,7 @@
 import React from 'react';
 
+require('./LoginFields.less');
+
 module.exports = class LoginFields extends React.Component {
 
     constructor(props) {

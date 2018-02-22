@@ -7,6 +7,8 @@ const Button = require('../global/Button.jsx');
 const { username, password } = require('../../../.env.json');
 const { loginManager } = require('../../singletons');
 
+require('./LoginPage.less');
+
 module.exports = class LoginPage extends React.Component {
 
     constructor(props) {
@@ -44,11 +46,12 @@ module.exports = class LoginPage extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="login-page">
                 <Title title="Login"/>
                 <LoginFields onInput={this.inputHandler} username={this.state.username} password={this.state.password} />
                 {
-                    this.state.loginning ? <Button caption="..." /> : <Button caption="Log me in!!" onClick={this.loginHandler} />
+                    this.state.loginning ? <Button className="blk" caption="..." /> :
+                                           <Button className="blk" caption="Let me in." onClick={this.loginHandler} />
                 }
             </div>
         );
