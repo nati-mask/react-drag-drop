@@ -6,7 +6,7 @@ module.exports = class PositionManager {
         this.ajax = ajaxmanager;
     }
 
-    getPosition() {
+    loadPosition() {
         return Promise.all([
 
             this.ajax({
@@ -26,7 +26,7 @@ module.exports = class PositionManager {
         ]).then(([{ value: pos_x }, { value: pos_y }]) => ({pos_x : parseInt(pos_x), pos_y : parseInt(pos_y)}));
     }
 
-    setPosition(pos_x, pos_y) {
+    savePosition(pos_x, pos_y) {
         return Promise.all([
 
             $.ajax({
@@ -48,5 +48,18 @@ module.exports = class PositionManager {
             })
 
         ])
+    }
+
+    limit({pos_x, pos_y}, out_el, in_el) {
+        let limited_pos_x = pos_x, limited_pos_y = pos_y;
+        if (isNaN(limited_pos_x)) limited_pos_x = 0;
+        if (isNaN(limited_pos_y)) limited_pos_y = 0;
+        let in_width = $(in_el).width(), in_height = $(in_el).height();
+        let out_width = $(out_el).width(), out_height = $(out_el).height();
+        if ((limited_pos_x + in_width) > out_width) limited_pos_x = out_width - in_width;
+        if ((limited_pos_y + in_height) > out_height) limited_pos_y = out_height - in_height;
+        if(limited_pos_x < 0) limited_pos_x = 0;
+        if(limited_pos_y < 0) limited_pos_y = 0;
+        return {pos_x : limited_pos_x, pos_y : limited_pos_y};
     }
 }

@@ -11,11 +11,11 @@ module.exports = class DraggableThumb extends React.Component {
     render() {
         return (
             <div
+                ref={this.props.getElement}
                 className="draggable-thumb"
                 style={{ top: this.props.pos_y || 0, left: this.props.pos_x || 0 }}
                 draggable={true}
-                onDragStart={this.props.onDragStartHandler}
-            >
+                onDragStart={this.props.onDragStartHandler}>
                 <div className="user-avatar">
                     <img src="./img/Avatar_BIG.jpg" />
                 </div>

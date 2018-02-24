@@ -24,18 +24,17 @@ module.exports = class DropBox extends React.Component {
 
     componentWillMount() {
 
-        positionManager.getPosition().then(positions => {
+        positionManager.loadPosition().then(positions => {
             console.log("Init positions:", positions);
-            this.setState(positions);
-            this.setState({loading_positions : false});
+            this.setState({loading_positions : false}, () => {
+                let { pos_x, pos_y } = positionManager.limit(positions, this.dropbox, this.draggable);
+                this.setState({pos_x, pos_y});
+            });
         })
 
     }
 
     onDragStartHandler(event) {
-        // event.preventDefault();
-        console.log('Start Dragging!');
-        console.log(event.screenX);
         this.setState({
             drag_begin_x: event.screenX,
             drag_begin_y: event.screenY,
@@ -51,29 +50,50 @@ module.exports = class DropBox extends React.Component {
         event.preventDefault();
         var drop_x = event.screenX;
         var drop_y = event.screenY;
-        var pos_x, pos_y;
+        let pos_x, pos_y;
         this.setState(prevState => {
 
-            pos_x = prevState.pos_x + drop_x - prevState.drag_begin_x;
-            pos_y = prevState.pos_y + drop_y - prevState.drag_begin_y;
+            let positions = positionManager.limit({
+                pos_x : prevState.pos_x + drop_x - prevState.drag_begin_x,
+                pos_y : prevState.pos_y + drop_y - prevState.drag_begin_y,
+            }, this.dropbox, this.draggable);
+
+            pos_x = positions.pos_x;
+            pos_y = positions.pos_y;
 
             return {
-                pos_x, pos_y,
+                pos_x,
+                pos_y,
                 drag_begin_x : 0,
                 drag_begin_y : 0,
             }
 
-        }, () => { positionManager.setPosition(pos_x, pos_y); })
+        }, () => { positionManager.savePosition(pos_x, pos_y); })
     }
 
     render() {
         return (
-            <div>
+            <div >
                 {
                     this.state.loading_positions ? 
+
                     <Loading /> :
-                    <div className="drop-box" onDrop={this.onDropHandler} onDragOver={this.onDragOverHandler}>
-                        <DraggableThumb full_name={this.props.full_name} pos_x={this.state.pos_x} pos_y={this.state.pos_y} onDragStartHandler={this.onDragStartHandler}/>
+
+                    <div
+
+                        ref={el => { this.dropbox = el; }}
+                        className="drop-box"
+                        onDrop={this.onDropHandler}
+                        onDragOver={this.onDragOverHandler}>
+
+                        <DraggableThumb
+
+                            getElement={el => { this.draggable = el}}
+                            full_name={this.props.full_name}
+                            pos_x={this.state.pos_x}
+                            pos_y={this.state.pos_y}
+                            onDragStartHandler={this.onDragStartHandler} />
+
                     </div>
                 }
             </div>
