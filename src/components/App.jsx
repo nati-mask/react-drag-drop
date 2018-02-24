@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DropBox = require('./DropBox.jsx');
+const HomePage = require('./HomePage/HomePage.jsx');
 const LoginPage = require('./LoginPage/LoginPage.jsx');
 const Button = require('./global/Button.jsx');
 const Loading = require('./global/Loading.jsx');
@@ -38,7 +38,6 @@ module.exports = class App extends React.Component {
                 loginning: false,
                 login_error: error_msg,
             });
-            console.error(err)
         });
     }
 
@@ -61,7 +60,7 @@ module.exports = class App extends React.Component {
         var current_page = <Loading />;
         if (!this.state.checking_auth) current_page = (
             this.state.logged_in ?
-            <DropBox full_name={this.state.logged_in_full_name} /> :
+            <HomePage logged_in_full_name={this.state.logged_in_full_name} /> :
             <LoginPage onLoginAttempt={this.loginHandler} loginning={this.state.loginning} login_error={this.state.login_error}/>
         );
         return (

@@ -3,9 +3,9 @@ import React from 'react';
 require('./DropBox.less');
 
 const DraggableThumb = require('./DraggableThumb.jsx');
-const Loading = require('./global/Loading.jsx');
+const Loading = require('../global/Loading.jsx');
 
-const { positionManager } = require('../singletons');
+const { positionManager } = require('../../singletons');
 
 module.exports = class DropBox extends React.Component {
 
