@@ -3,8 +3,10 @@ import React from 'react';
 require('./Button.less');
 
 module.exports = function Button(props) {
+    let className = 'app-btn';
+    if (props.className) className += ' ' + props.className;
     return (
-        <button className={'app-btn' + (props.className ? ' ' + props.className : '')} onClick={props.onClick}>
+        <button className={className} onClick={props.onClick}>
             {props.caption}
         </button>
     );

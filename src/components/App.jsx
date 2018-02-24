@@ -14,29 +14,46 @@ module.exports = class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loginning : false,
+            checking_auth: true,
+            login_error : null,
             logged_in: null,
             logged_in_full_name: null,
-            checking_auth: true,
         };
-        this.loginSuccessHandler = this.loginSuccessHandler.bind(this);
+        this.loginHandler = this.loginHandler.bind(this);
         this.logoutHandler = this.logoutHandler.bind(this);
     }
 
-    logoutHandler() {
-        loginManager.logout();
-        this.setState({ logged_in: null });
+    loginHandler(auth_details) {
+        this.setState({ loginning: true, login_error: null });
+        loginManager.login(auth_details).then(logged_user => {
+            this.setState({
+                loginning: false,
+                logged_in: logged_user.username,
+                logged_in_full_name: logged_user.full_name
+            });
+        }).catch(err => {
+            let error_msg = err.message;
+            this.setState({
+                loginning: false,
+                login_error: error_msg,
+            });
+            console.error(err)
+        });
     }
 
-    loginSuccessHandler(logged_user) {
-        this.setState({ logged_in: logged_user.username, logged_in_full_name: logged_user.full_name });
+    logoutHandler() {
+        loginManager.logout(); // Not async, logout is immediate.
+        this.setState({ logged_in: null });
     }
 
     componentWillMount() {
         loginManager.checkLoggedIn().then(logged_user => {
-            console.log("Finish checking Auth!");
             if (logged_user) {
                 this.setState({ logged_in: logged_user.username, logged_in_full_name: logged_user.full_name, checking_auth : false });
-            } else this.setState({ checking_auth: false });
+            } else {
+                this.setState({ checking_auth: false });
+            }
         })
     }
 
@@ -45,17 +62,17 @@ module.exports = class App extends React.Component {
         if (!this.state.checking_auth) current_page = (
             this.state.logged_in ?
             <DropBox full_name={this.state.logged_in_full_name} /> :
-            <LoginPage onSuccess={this.loginSuccessHandler} />
+            <LoginPage onLoginAttempt={this.loginHandler} loginning={this.state.loginning} login_error={this.state.login_error}/>
         );
         return (
             <div>
-                <header className="legend">
+                <header>
                     <p>
                         Drag and Drop React Tech Challange
-                        { this.state.logged_in && <Button caption="Log Out" onClick={this.logoutHandler}/> }
+                        { this.state.logged_in && <Button className="log-out-btn" caption="Log Out" onClick={this.logoutHandler}/> }
                     </p>
                 </header>
-                <div className="page">
+                <div className="page-wrapper">
                     { current_page }
                 </div>
             </div>

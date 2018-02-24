@@ -4,7 +4,6 @@ const Title = require('./Title.jsx');
 const LoginFields = require('./LoginFields.jsx');
 const Button = require('../global/Button.jsx');
 
-const { username, password } = require('../../../.env.json');
 const { loginManager } = require('../../singletons');
 
 require('./LoginPage.less');
@@ -16,24 +15,16 @@ module.exports = class LoginPage extends React.Component {
         this.state = {
             username: "",
             password: "",
-            loginning: false,
         }
 
-        this.loginHandler = this.loginHandler.bind(this);
+        this.loginAttemptHandler = this.loginAttemptHandler.bind(this);
         this.inputHandler = this.inputHandler.bind(this);
     }
 
-    loginHandler () {
-        if(this.props.onSuccess) {
-            this.setState({ loginning: true });
-            loginManager.login(this.state).then(user => {
-                this.setState({ loginning: false });
-                this.props.onSuccess(user);
-            }).catch(err => {
-                this.setState({ loginning: false });
-                console.error(err)
-            });
-        }
+    loginAttemptHandler (event) {
+        event.preventDefault();
+        if (this.props.onLoginAttempt) this.props.onLoginAttempt(this.state);
+        else throw new Error('<LoginPage> has No handler for login attempt');
     }
 
     inputHandler(event) {
@@ -44,15 +35,26 @@ module.exports = class LoginPage extends React.Component {
         this.setState({ [name]: value });
     }
 
+    preventDefault(event) {
+        event.preventDefault();
+    }
+
     render() {
         return (
             <div className="login-page">
-                <Title title="Login"/>
-                <LoginFields onInput={this.inputHandler} username={this.state.username} password={this.state.password} />
-                {
-                    this.state.loginning ? <Button className="blk" caption="..." /> :
-                                           <Button className="blk" caption="Let me in." onClick={this.loginHandler} />
-                }
+                <form>
+                    <Title title="Login"/>
+                    <LoginFields onInput={this.inputHandler} username={this.state.username} password={this.state.password} />
+                    {
+                        this.props.loginning ?
+                        <Button className="blk" caption="..." onClick={this.preventDefault} /> :
+                        <Button className="blk" caption="Let me in." onClick={this.loginAttemptHandler} />
+                    }
+                    {
+                        this.props.login_error &&
+                        <div className="login-error">{this.props.login_error}</div>
+                    }
+                </form>
             </div>
         );
     }
