@@ -11,8 +11,8 @@ module.exports = class LoginFields extends React.Component {
     render() {
         return (
             <div className="login-fields">
-                <input type="text" name="username" value={this.props.username} onInput={this.props.onInput} />
-                <input type="password" name="password" value={this.props.password} onInput={this.props.onInput}/>
+                <input type="text" name="username" placeholder="User Name" value={this.props.username} onInput={this.props.onInput} />
+                <input type="password" name="password" placeholder="Password" value={this.props.password} onInput={this.props.onInput}/>
             </div>
         )
     }
