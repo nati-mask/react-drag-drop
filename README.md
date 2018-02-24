@@ -6,7 +6,7 @@ npm install
 npm run serve
 ```
 This supposed to automatically open the browser and show the app.  
-If the browser not opening, try: [localhost:9898](http://localhost:9898)
+If the browser not opening, try: [http://127.0.0.1:9898](http://localhost:9898)
 
 If it's not working (I didn't test it on windows) do:
 ```bash
