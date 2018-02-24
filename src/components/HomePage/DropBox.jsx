@@ -25,16 +25,20 @@ module.exports = class DropBox extends React.Component {
     componentWillMount() {
 
         positionManager.loadPosition().then(positions => {
-            console.log("Init positions:", positions);
+            if (this.props.setStatusText) this.props.setStatusText('Positions loaded from kvstore...');
             this.setState({loading_positions : false}, () => {
                 let { pos_x, pos_y } = positionManager.limit(positions, this.dropbox, this.draggable);
                 this.setState({pos_x, pos_y});
             });
-        })
+        }).catch(err => {
+            if (this.props.setStatusText) this.props.setStatusText('Error loading positions from kvstore: ' + err.responseJSON.message);
+            console.error('error loading positions at kvstore:', err);
+        });
 
     }
 
     onDragStartHandler(event) {
+        if (this.props.setStatusText) this.props.setStatusText(null);
         this.setState({
             drag_begin_x: event.screenX,
             drag_begin_y: event.screenY,
@@ -46,7 +50,6 @@ module.exports = class DropBox extends React.Component {
     }
 
     onDropHandler (event) {
-        console.log('Dropped');
         event.preventDefault();
         var drop_x = event.screenX;
         var drop_y = event.screenY;
@@ -68,7 +71,14 @@ module.exports = class DropBox extends React.Component {
                 drag_begin_y : 0,
             }
 
-        }, () => { positionManager.savePosition(pos_x, pos_y); })
+        }, () => {
+            positionManager.savePosition(pos_x, pos_y).then(() => {
+                if (this.props.setStatusText) this.props.setStatusText('Positions saved at kvstore!');
+            }).catch(err => {
+                if (this.props.setStatusText) this.props.setStatusText('Error saving positions at kvstore: ' + err.responseJSON.message);
+                console.error('error saving positions at kvstore:', err);
+            });
+        })
     }
 
     render() {
